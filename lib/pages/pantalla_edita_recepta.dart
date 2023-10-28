@@ -58,7 +58,9 @@ class _PantallaEditaReceptaState extends State<PantallaEditaRecepta> {
                     "valoracio": 0,
                     "ingredients": controllers[4].text.split('\n'),
                     "pasAPas": controllers[5].text.split('\n'),
-                    "imatge": controllers[6].text,
+                    "imatge": controllers[6].text == ""
+                        ? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkRKA2d4bynFWUL1-K4cCg4GYUNeBC7R9RtycIkKGf6jL8zhrUj9yROdOUH53yhNTjEgw&usqp=CAU"
+                        : controllers[6].text,
                   });
                   Navigator.pop(context, recepta);
                 },
