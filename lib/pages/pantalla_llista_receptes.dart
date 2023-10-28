@@ -3,39 +3,15 @@ import 'package:flutter/services.dart';
 import 'package:tasca_3/classe_recepta.dart';
 import 'dart:convert';
 
-class PantallaLlistaReceptes extends StatelessWidget {
+class PantallaLlistaReceptes extends StatefulWidget {
   static const String route = '/';
   const PantallaLlistaReceptes({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text("Llista de receptes",
-              style: TextStyle(color: Colors.white)),
-          backgroundColor: Colors.grey[900],
-        ),
-        backgroundColor: Colors.grey[800],
-        body: const LlistaReceptes(),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.pushNamed(context, "/edita_recepta");
-          },
-          backgroundColor: Colors.orange[900],
-          child: const Icon(Icons.add, color: Colors.white),
-        ));
-  }
-}
-
-class LlistaReceptes extends StatefulWidget {
-  const LlistaReceptes({
-    super.key,
-  });
 
   @override
-  State<LlistaReceptes> createState() => _LlistaReceptesState();
+  State<PantallaLlistaReceptes> createState() => _PantallaLlistaReceptesState();
 }
 
-class _LlistaReceptesState extends State<LlistaReceptes> {
+class _PantallaLlistaReceptesState extends State<PantallaLlistaReceptes> {
   List<Recepta>? receptes;
 
   Future<List<Recepta>> getLlistaReceptesFuture() async {
@@ -70,6 +46,29 @@ class _LlistaReceptesState extends State<LlistaReceptes> {
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text("Llista de receptes",
+              style: TextStyle(color: Colors.white)),
+          backgroundColor: Colors.grey[900],
+        ),
+        backgroundColor: Colors.grey[800],
+        body: llistaReceptes(),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.pushNamed(context, "/edita_recepta")
+                .then((value) => setState(() {
+                      if (value is Recepta) {
+                        receptes!.add(value);
+                      }
+                    }));
+          },
+          backgroundColor: Colors.orange[900],
+          child: const Icon(Icons.add, color: Colors.white),
+        ));
+  }
+
+  GridView llistaReceptes() {
     return GridView.builder(
       padding: const EdgeInsets.only(
         bottom: 80, //perquè el floatingbutton no tapi la última recepta
