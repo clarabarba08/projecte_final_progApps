@@ -16,11 +16,12 @@ class PantallaLlistaReceptes extends StatelessWidget {
               style: TextStyle(color: Colors.white)),
           backgroundColor: Colors.grey[900],
         ),
+        backgroundColor: Colors.grey[800],
         body: const LlistaReceptes(),
         floatingActionButton: FloatingActionButton(
           onPressed: () {},
-          child: const Icon(Icons.add, color: Colors.white),
           backgroundColor: Colors.orange[900],
+          child: const Icon(Icons.add, color: Colors.white),
         ));
   }
 }
@@ -153,7 +154,12 @@ class _LlistaReceptesState extends State<LlistaReceptes> {
           context,
           PantallaMostraRecepta.route,
           arguments: receptes![index],
-        );
+        ).then((value) => setState(() {
+              if (value is Recepta) {
+                receptes![index].liked = value.liked;
+                receptes![index].valoracio = value.valoracio;
+              }
+            }));
       },
     );
   }
@@ -198,7 +204,7 @@ Future<void> RatingDialog(
           children: [
             for (int i = 0; i < 5; i++)
               GestureDetector(
-                child: Icon(Icons.star, color: Colors.white, size: 40),
+                child: const Icon(Icons.star, color: Colors.white, size: 40),
                 onTap: () {
                   valoraRecepta(i + 1);
                   Navigator.of(context).pop(i + 1);

@@ -35,66 +35,81 @@ class RecipeBanner extends StatefulWidget {
 class _RecipeBannerState extends State<RecipeBanner> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 300,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: NetworkImage(widget.recepta.imatge),
-          fit: BoxFit.cover,
-        ),
-      ),
+    return WillPopScope(
       child: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.bottomCenter,
-            end: Alignment.topCenter,
-            colors: [Colors.black, Colors.transparent],
+        height: 300,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: NetworkImage(widget.recepta.imatge),
+            fit: BoxFit.cover,
           ),
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    widget.recepta.nom,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      color: Colors.white,
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+              colors: [Colors.black, Colors.transparent],
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      widget.recepta.nom,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      setState(() {
-                        widget.recepta.liked = !widget.recepta.liked;
-                      });
-                    },
-                    icon: Icon(
-                      Icons.favorite,
-                      color: widget.recepta.liked ? Colors.red : Colors.white,
-                      size: 30,
-                    ),
-                  )
-                ],
-              ),
-              rating(valoracio: widget.recepta.valoracio),
-            ],
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          widget.recepta.liked = !widget.recepta.liked;
+                        });
+                      },
+                      icon: Icon(
+                        Icons.favorite,
+                        color: widget.recepta.liked ? Colors.red : Colors.white,
+                        size: 30,
+                      ),
+                    )
+                  ],
+                ),
+                rating(
+                  valoracio: widget.recepta.valoracio,
+                  setRating: (valoracio) {
+                    setState(() {
+                      widget.recepta.valoracio = valoracio;
+                    });
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
+      onWillPop: () async {
+        Navigator.pop(context, widget.recepta);
+        return false;
+      },
     );
   }
 }
 
 class rating extends StatelessWidget {
   final int valoracio;
+  final Function setRating;
 
   const rating({
     super.key,
     required this.valoracio,
+    required this.setRating,
   });
 
   @override
@@ -102,9 +117,23 @@ class rating extends StatelessWidget {
     return Row(
       children: [
         for (int i = 0; i < valoracio; i++)
-          Icon(Icons.star, color: Colors.orange),
-        for (int i = 0; i < 5 - valoracio; i++)
-          Icon(Icons.star, color: Colors.white)
+          GestureDetector(
+            child: const Icon(
+              Icons.star,
+              color: Colors.orange,
+              size: 30,
+            ),
+            onTap: () => setRating(i + 1),
+          ),
+        for (int i = valoracio; i < 5; i++)
+          GestureDetector(
+            child: const Icon(
+              Icons.star,
+              color: Colors.white,
+              size: 30,
+            ),
+            onTap: () => setRating(i + 1),
+          )
       ],
     );
   }
@@ -123,12 +152,12 @@ class RecipeOverview extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.schedule,
                 color: Colors.orange,
                 size: 30,
               ),
-              SizedBox(
+              const SizedBox(
                 width: 5,
               ),
               Text(
@@ -139,12 +168,12 @@ class RecipeOverview extends StatelessWidget {
           ),
           Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.lunch_dining,
                 color: Colors.orange,
                 size: 30,
               ),
-              SizedBox(
+              const SizedBox(
                 width: 5,
               ),
               Text(
@@ -155,12 +184,12 @@ class RecipeOverview extends StatelessWidget {
           ),
           Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.restaurant,
                 color: Colors.orange,
                 size: 30,
               ),
-              SizedBox(
+              const SizedBox(
                 width: 5,
               ),
               Text(
@@ -186,7 +215,7 @@ class Ingredients extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          const Text(
             "INGREDIENTS",
             style: TextStyle(
               fontSize: 30,
@@ -218,7 +247,7 @@ class Preparation extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          const Text(
             "PREPARACIÓ",
             style: TextStyle(
               fontSize: 30,
