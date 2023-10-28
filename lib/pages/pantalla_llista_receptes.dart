@@ -3,8 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:tasca_3/classe_recepta.dart';
 import 'dart:convert';
 
-import 'package:tasca_3/pages/pantalla_mostra_recepta.dart';
-
 class PantallaLlistaReceptes extends StatelessWidget {
   static const String route = '/';
   const PantallaLlistaReceptes({super.key});
@@ -19,7 +17,9 @@ class PantallaLlistaReceptes extends StatelessWidget {
         backgroundColor: Colors.grey[800],
         body: const LlistaReceptes(),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pushNamed(context, "/edita_recepta");
+          },
           backgroundColor: Colors.orange[900],
           child: const Icon(Icons.add, color: Colors.white),
         ));
@@ -152,7 +152,7 @@ class _LlistaReceptesState extends State<LlistaReceptes> {
       onTap: () {
         Navigator.pushNamed(
           context,
-          PantallaMostraRecepta.route,
+          "/visualitza_recepta",
           arguments: receptes![index],
         ).then((value) => setState(() {
               if (value is Recepta) {

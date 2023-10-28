@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tasca_3/classe_recepta.dart';
 
 class PantallaMostraRecepta extends StatelessWidget {
-  static const String route = '/recepta';
+  static const String route = '/visualitza_recepta';
 
   @override
   Widget build(BuildContext context) {
