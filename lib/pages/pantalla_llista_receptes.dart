@@ -1,31 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:tasca_3/classe_recepta.dart';
+import 'dart:convert';
 
-Map<String, dynamic> receptaJSON = {
-  "nom": "Espaguetis a la carbonara",
-  "tempsPreparacio": 30,
-  "persones": 4,
-  "calories": 600,
-  "valoracio": 3,
-  "ingredients": [
-    "200g espaguetis",
-    "2 ous",
-    "100g bacó",
-    "50g formatge parmesà",
-    "Pebre negre al gust"
-  ],
-  "pasAPas": [
-    "1. Bullir els espaguetis",
-    "2. Saltejar el bacó",
-    "3. Batre l'ou amb el formatge",
-    "4. Afegir els espaguetis a la paella",
-    "5. Afegir la barreja d'ou i formatge",
-    "6. Remenar fins que s'espessi",
-    "7. Salpebrar al gust"
-  ],
-  "imatge":
-      "https://e00-xlk-cooking-elmundo.uecdn.es/files/article_main_microformat_4_3/uploads/2023/02/28/63fe8443a52bc.jpeg",
-};
+import 'package:tasca_3/pages/pantalla_mostra_recepta.dart';
 
 class PantallaLlistaReceptes extends StatelessWidget {
   static const String route = '/';
@@ -38,9 +16,7 @@ class PantallaLlistaReceptes extends StatelessWidget {
               style: TextStyle(color: Colors.white)),
           backgroundColor: Colors.grey[900],
         ),
-        body: const Center(
-          child: LlistaReceptes(),
-        ),
+        body: const LlistaReceptes(),
         floatingActionButton: FloatingActionButton(
           onPressed: () {},
           child: const Icon(Icons.add, color: Colors.white),
@@ -59,28 +35,49 @@ class LlistaReceptes extends StatefulWidget {
 }
 
 class _LlistaReceptesState extends State<LlistaReceptes> {
-  List<Recepta> receptes = [];
-  List likes = [];
+  List<Recepta>? receptes;
+
+  Future<List<Recepta>> getLlistaReceptesFuture() async {
+    final jsondata = await rootBundle.loadString('assets/receptes.json');
+    final list = json.decode(jsondata) as List<dynamic>;
+    return list.map((e) => Recepta(e)).toList();
+  }
+
+  List<Recepta>? getLlistaReceptes() {
+    List<Recepta> L = [];
+    getLlistaReceptesFuture().then((llistaReceptes) {
+      setState(() {
+        for (var recepta in llistaReceptes) {
+          L.add(recepta);
+        }
+      });
+    });
+    return L;
+  }
+
   @override
   void initState() {
     super.initState();
-    receptes = List.generate(10, (index) => Recepta(receptaJSON));
+    receptes = getLlistaReceptes();
   }
 
   void valorarRecepta(int index, int valoracio) {
     setState(() {
-      receptes[index].valoracio = valoracio;
+      receptes![index].valoracio = valoracio;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
+      padding: const EdgeInsets.only(
+        bottom: 80, //perquè el floatingbutton no tapi la última recepta
+      ),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
       ),
       itemBuilder: itemBuilder,
-      itemCount: receptes.length,
+      itemCount: receptes!.length,
     );
   }
 
@@ -91,7 +88,7 @@ class _LlistaReceptesState extends State<LlistaReceptes> {
           height: 300,
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: NetworkImage(receptes[index].imatge),
+              image: NetworkImage(receptes![index].imatge),
               fit: BoxFit.cover,
             ),
           ),
@@ -110,7 +107,7 @@ class _LlistaReceptesState extends State<LlistaReceptes> {
                 children: [
                   Expanded(
                     child: Text(
-                      receptes[index].nom,
+                      receptes![index].nom,
                       style: const TextStyle(
                         fontSize: 20,
                         color: Colors.white,
@@ -122,7 +119,7 @@ class _LlistaReceptesState extends State<LlistaReceptes> {
                     children: [
                       GestureDetector(
                         child: Rating(
-                          valoracio: receptes[index].valoracio,
+                          valoracio: receptes![index].valoracio,
                         ),
                         onTap: () {
                           RatingDialog(context,
@@ -132,13 +129,14 @@ class _LlistaReceptesState extends State<LlistaReceptes> {
                       IconButton(
                         onPressed: () {
                           setState(() {
-                            receptes[index].liked = !receptes[index].liked;
+                            receptes![index].liked = !receptes![index].liked;
                           });
                         },
                         icon: Icon(
                           Icons.favorite,
-                          color:
-                              receptes[index].liked ? Colors.red : Colors.white,
+                          color: receptes![index].liked
+                              ? Colors.red
+                              : Colors.white,
                           size: 30,
                         ),
                       )
@@ -151,7 +149,11 @@ class _LlistaReceptesState extends State<LlistaReceptes> {
         ),
       ),
       onTap: () {
-        print("clicat");
+        Navigator.pushNamed(
+          context,
+          PantallaMostraRecepta.route,
+          arguments: receptes![index],
+        );
       },
     );
   }

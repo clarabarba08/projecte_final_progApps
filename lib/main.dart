@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tasca_3/pages/pantalla_llista_receptes.dart';
+import 'package:tasca_3/pages/pantalla_mostra_recepta.dart';
 
 void main() {
   runApp(MainApp());
@@ -17,6 +18,7 @@ class MainApp extends StatelessWidget {
         ),
         routes: {
           PantallaLlistaReceptes.route: (context) => PantallaLlistaReceptes(),
+          PantallaMostraRecepta.route: (context) => PantallaMostraRecepta(),
         });
   }
 }
