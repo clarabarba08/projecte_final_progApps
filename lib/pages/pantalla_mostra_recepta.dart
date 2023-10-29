@@ -1,45 +1,149 @@
 import 'package:flutter/material.dart';
 import 'package:tasca_3/classe_recepta.dart';
 
-class PantallaMostraRecepta extends StatelessWidget {
+class PantallaMostraRecepta extends StatefulWidget {
   static const String route = '/visualitza_recepta';
   const PantallaMostraRecepta({super.key});
-  @override
-  Widget build(BuildContext context) {
-    final Recepta recepta =
-        ModalRoute.of(context)!.settings.arguments as Recepta;
-    return Scaffold(
-      body: ListView(
-        children: [
-          RecipeBanner(recepta),
-          RecipeOverview(recepta),
-          Ingredients(recepta),
-          Preparation(recepta),
-        ],
-      ),
-    );
-  }
-}
-
-class RecipeBanner extends StatefulWidget {
-  final Recepta receptaEntrada;
-  const RecipeBanner(this.receptaEntrada);
 
   @override
-  State<RecipeBanner> createState() => _RecipeBannerState();
+  State<PantallaMostraRecepta> createState() => _PantallaMostraReceptaState();
 }
 
-class _RecipeBannerState extends State<RecipeBanner> {
+class _PantallaMostraReceptaState extends State<PantallaMostraRecepta> {
   Recepta? recepta;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    recepta = widget.receptaEntrada; //agafa el paràmetre de la classe
+    recepta = ModalRoute.of(context)!.settings.arguments as Recepta?;
   }
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      body: ListView(
+        children: [
+          recipeTopPart(context),
+          recipeOverview(),
+          ingredients(),
+          preparation(),
+        ],
+      ),
+    );
+  }
+
+  Padding preparation() {
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            "PREPARACIÓ",
+            style: TextStyle(
+              fontSize: 30,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+          for (int i = 0; i < recepta!.pasAPas.length; i++)
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Text(
+                recepta!.pasAPas[i],
+                style: const TextStyle(fontSize: 20),
+              ),
+            )
+        ],
+      ),
+    );
+  }
+
+  Padding ingredients() {
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            "INGREDIENTS",
+            style: TextStyle(
+              fontSize: 30,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+          for (int i = 0; i < recepta!.ingredients.length; i++)
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Text(
+                recepta!.ingredients[i],
+                style: const TextStyle(fontSize: 20),
+              ),
+            )
+        ],
+      ),
+    );
+  }
+
+  Padding recipeOverview() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 12, top: 16, right: 12, bottom: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              const Icon(
+                Icons.schedule,
+                color: Colors.orange,
+                size: 30,
+              ),
+              const SizedBox(
+                width: 5,
+              ),
+              Text(
+                "${recepta!.tempsPreparacio} MIN",
+                style: const TextStyle(fontSize: 16),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              const Icon(
+                Icons.lunch_dining,
+                color: Colors.orange,
+                size: 30,
+              ),
+              const SizedBox(
+                width: 5,
+              ),
+              Text(
+                "${recepta!.persones} Servings",
+                style: const TextStyle(fontSize: 16),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              const Icon(
+                Icons.restaurant,
+                color: Colors.orange,
+                size: 30,
+              ),
+              const SizedBox(
+                width: 5,
+              ),
+              Text(
+                "${recepta!.calories} Cals",
+                style: const TextStyle(fontSize: 16),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  WillPopScope recipeTopPart(BuildContext context) {
     return WillPopScope(
       //per detectar si tires enrere
       child: Container(
@@ -188,135 +292,6 @@ class Rating extends StatelessWidget {
             onTap: () => setRating(i + 1),
           )
       ],
-    );
-  }
-}
-
-class RecipeOverview extends StatelessWidget {
-  final Recepta recepta;
-  const RecipeOverview(this.recepta);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 12, top: 16, right: 12, bottom: 16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              const Icon(
-                Icons.schedule,
-                color: Colors.orange,
-                size: 30,
-              ),
-              const SizedBox(
-                width: 5,
-              ),
-              Text(
-                "${recepta.tempsPreparacio} MIN",
-                style: const TextStyle(fontSize: 16),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              const Icon(
-                Icons.lunch_dining,
-                color: Colors.orange,
-                size: 30,
-              ),
-              const SizedBox(
-                width: 5,
-              ),
-              Text(
-                "${recepta.persones} Servings",
-                style: const TextStyle(fontSize: 16),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              const Icon(
-                Icons.restaurant,
-                color: Colors.orange,
-                size: 30,
-              ),
-              const SizedBox(
-                width: 5,
-              ),
-              Text(
-                "${recepta.calories} Cals",
-                style: const TextStyle(fontSize: 16),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class Ingredients extends StatelessWidget {
-  final Recepta recepta;
-  const Ingredients(this.recepta);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(12.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            "INGREDIENTS",
-            style: TextStyle(
-              fontSize: 30,
-              fontWeight: FontWeight.w900,
-            ),
-          ),
-          for (int i = 0; i < recepta.ingredients.length; i++)
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: Text(
-                recepta.ingredients[i],
-                style: const TextStyle(fontSize: 20),
-              ),
-            )
-        ],
-      ),
-    );
-  }
-}
-
-class Preparation extends StatelessWidget {
-  final Recepta recepta;
-  const Preparation(this.recepta);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(12.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            "PREPARACIÓ",
-            style: TextStyle(
-              fontSize: 30,
-              fontWeight: FontWeight.w900,
-            ),
-          ),
-          for (int i = 0; i < recepta.pasAPas.length; i++)
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: Text(
-                recepta.pasAPas[i],
-                style: const TextStyle(fontSize: 20),
-              ),
-            )
-        ],
-      ),
     );
   }
 }
