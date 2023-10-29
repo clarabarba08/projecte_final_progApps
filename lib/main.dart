@@ -20,7 +20,8 @@ class MainApp extends StatelessWidget {
         routes: {
           PantallaLlistaReceptes.route: (context) =>
               const PantallaLlistaReceptes(),
-          PantallaMostraRecepta.route: (context) => PantallaMostraRecepta(),
+          PantallaMostraRecepta.route: (context) =>
+              const PantallaMostraRecepta(),
           PantallaEditaRecepta.route: (context) => const PantallaEditaRecepta(),
         });
   }

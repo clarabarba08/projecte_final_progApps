@@ -3,7 +3,7 @@ import 'package:tasca_3/classe_recepta.dart';
 
 class PantallaMostraRecepta extends StatelessWidget {
   static const String route = '/visualitza_recepta';
-
+  const PantallaMostraRecepta({super.key});
   @override
   Widget build(BuildContext context) {
     final Recepta recepta =
@@ -35,12 +35,13 @@ class _RecipeBannerState extends State<RecipeBanner> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    recepta = widget.receptaEntrada;
+    recepta = widget.receptaEntrada; //agafa el paràmetre de la classe
   }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
+      //per detectar si tires enrere
       child: Container(
         height: 300,
         decoration: BoxDecoration(
@@ -62,78 +63,8 @@ class _RecipeBannerState extends State<RecipeBanner> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const BackButton(
-                      color: Colors.white,
-                    ),
-                    Expanded(child: Container()),
-                    IconButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, "/edita_recepta",
-                                arguments: recepta)
-                            .then((value) {
-                          if (value is Recepta) {
-                            setState(() {
-                              recepta = value;
-                            });
-                          }
-                        });
-                      },
-                      icon: const Icon(
-                        Icons.edit,
-                        color: Colors.white,
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        Navigator.pop(context, true);
-                      },
-                      icon: const Icon(
-                        Icons.delete,
-                        color: Colors.white,
-                      ),
-                    )
-                  ],
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          recepta!.nom,
-                          style: const TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              recepta!.liked = !recepta!.liked;
-                            });
-                          },
-                          icon: Icon(
-                            Icons.favorite,
-                            color: recepta!.liked ? Colors.red : Colors.white,
-                            size: 30,
-                          ),
-                        )
-                      ],
-                    ),
-                    Rating(
-                      valoracio: recepta!.valoracio,
-                      setRating: (valoracio) {
-                        setState(() {
-                          recepta!.valoracio = valoracio;
-                        });
-                      },
-                    ),
-                  ],
-                ),
+                navegacioSuperior(context),
+                infoRecepta(),
               ],
             ),
           ),
@@ -143,6 +74,83 @@ class _RecipeBannerState extends State<RecipeBanner> {
         Navigator.pop(context, recepta);
         return false;
       },
+    );
+  }
+
+  Column infoRecepta() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              recepta!.nom,
+              style: const TextStyle(
+                fontSize: 20,
+                color: Colors.white,
+              ),
+            ),
+            IconButton(
+              onPressed: () {
+                setState(() {
+                  recepta!.liked = !recepta!.liked;
+                });
+              },
+              icon: Icon(
+                Icons.favorite,
+                color: recepta!.liked ? Colors.red : Colors.white,
+                size: 30,
+              ),
+            )
+          ],
+        ),
+        Rating(
+          valoracio: recepta!.valoracio,
+          setRating: (valoracio) {
+            setState(() {
+              recepta!.valoracio = valoracio;
+            });
+          },
+        ),
+      ],
+    );
+  }
+
+  Row navegacioSuperior(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const BackButton(
+          color: Colors.white,
+        ),
+        Expanded(child: Container()),
+        IconButton(
+          onPressed: () {
+            Navigator.pushNamed(context, "/edita_recepta", arguments: recepta)
+                .then((value) {
+              if (value is Recepta) {
+                setState(() {
+                  recepta = value;
+                });
+              }
+            });
+          },
+          icon: const Icon(
+            Icons.edit,
+            color: Colors.white,
+          ),
+        ),
+        IconButton(
+          onPressed: () {
+            Navigator.pop(context, true);
+          },
+          icon: const Icon(
+            Icons.delete,
+            color: Colors.white,
+          ),
+        )
+      ],
     );
   }
 }
