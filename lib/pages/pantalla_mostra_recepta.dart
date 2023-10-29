@@ -9,16 +9,14 @@ class PantallaMostraRecepta extends StatelessWidget {
     final Recepta recepta =
         ModalRoute.of(context)!.settings.arguments as Recepta;
 
-    return MaterialApp(
-      home: Scaffold(
-        body: ListView(
-          children: [
-            RecipeBanner(recepta!),
-            RecipeOverview(recepta),
-            Ingredients(recepta),
-            Preparation(recepta),
-          ],
-        ),
+    return Scaffold(
+      body: ListView(
+        children: [
+          RecipeBanner(recepta),
+          RecipeOverview(recepta),
+          Ingredients(recepta),
+          Preparation(recepta),
+        ],
       ),
     );
   }
@@ -55,39 +53,53 @@ class _RecipeBannerState extends State<RecipeBanner> {
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      widget.recepta.nom,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                      ),
+                    BackButton(
+                      color: Colors.white,
                     ),
-                    IconButton(
-                      onPressed: () {
-                        setState(() {
-                          widget.recepta.liked = !widget.recepta.liked;
-                        });
-                      },
-                      icon: Icon(
-                        Icons.favorite,
-                        color: widget.recepta.liked ? Colors.red : Colors.white,
-                        size: 30,
-                      ),
-                    )
                   ],
                 ),
-                rating(
-                  valoracio: widget.recepta.valoracio,
-                  setRating: (valoracio) {
-                    setState(() {
-                      widget.recepta.valoracio = valoracio;
-                    });
-                  },
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          widget.recepta.nom,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              widget.recepta.liked = !widget.recepta.liked;
+                            });
+                          },
+                          icon: Icon(
+                            Icons.favorite,
+                            color: widget.recepta.liked
+                                ? Colors.red
+                                : Colors.white,
+                            size: 30,
+                          ),
+                        )
+                      ],
+                    ),
+                    Rating(
+                      valoracio: widget.recepta.valoracio,
+                      setRating: (valoracio) {
+                        setState(() {
+                          widget.recepta.valoracio = valoracio;
+                        });
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -102,11 +114,11 @@ class _RecipeBannerState extends State<RecipeBanner> {
   }
 }
 
-class rating extends StatelessWidget {
+class Rating extends StatelessWidget {
   final int valoracio;
   final Function setRating;
 
-  const rating({
+  const Rating({
     super.key,
     required this.valoracio,
     required this.setRating,
@@ -162,7 +174,7 @@ class RecipeOverview extends StatelessWidget {
               ),
               Text(
                 "${recepta.tempsPreparacio} MIN",
-                style: TextStyle(fontSize: 16),
+                style: const TextStyle(fontSize: 16),
               ),
             ],
           ),
@@ -178,7 +190,7 @@ class RecipeOverview extends StatelessWidget {
               ),
               Text(
                 "${recepta.persones} Servings",
-                style: TextStyle(fontSize: 16),
+                style: const TextStyle(fontSize: 16),
               ),
             ],
           ),
@@ -194,7 +206,7 @@ class RecipeOverview extends StatelessWidget {
               ),
               Text(
                 "${recepta.calories} Cals",
-                style: TextStyle(fontSize: 16),
+                style: const TextStyle(fontSize: 16),
               ),
             ],
           ),
@@ -227,7 +239,7 @@ class Ingredients extends StatelessWidget {
               padding: const EdgeInsets.only(top: 8),
               child: Text(
                 recepta.ingredients[i],
-                style: TextStyle(fontSize: 20),
+                style: const TextStyle(fontSize: 20),
               ),
             )
         ],
@@ -259,7 +271,7 @@ class Preparation extends StatelessWidget {
               padding: const EdgeInsets.only(top: 8),
               child: Text(
                 recepta.pasAPas[i],
-                style: TextStyle(fontSize: 20),
+                style: const TextStyle(fontSize: 20),
               ),
             )
         ],
