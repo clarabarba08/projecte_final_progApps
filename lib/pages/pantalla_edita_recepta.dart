@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:tasca_3/classe_recepta.dart';
 
@@ -13,13 +14,14 @@ class _PantallaEditaReceptaState extends State<PantallaEditaRecepta> {
     for (var i = 0; i < 7; i++) TextEditingController()
   ];
   String pageName = "Nova recepta";
+  Recepta? receptaInicial;
 
   void saveRecepta() {
     Recepta recepta = Recepta({
       "nom": controllers[0].text,
-      "tempsPreparacio": int.parse(controllers[1].text),
-      "persones": int.parse(controllers[2].text),
-      "calories": int.parse(controllers[3].text),
+      "tempsPreparacio": int.tryParse(controllers[1].text) ?? 0,
+      "persones": int.tryParse(controllers[2].text) ?? 0,
+      "calories": int.tryParse(controllers[3].text) ?? 0,
       "valoracio": 0,
       "ingredients": controllers[4].text.split('\n'),
       "pasAPas": controllers[5].text.split('\n'),
@@ -45,56 +47,113 @@ class _PantallaEditaReceptaState extends State<PantallaEditaRecepta> {
       controllers[6].text = recepta.imatge;
       pageName = "Edita recepta";
     }
+    receptaInicial = Recepta({
+      "nom": controllers[0].text,
+      "tempsPreparacio": int.tryParse(controllers[1].text) ?? 0,
+      "persones": int.tryParse(controllers[2].text) ?? 0,
+      "calories": int.tryParse(controllers[3].text) ?? 0,
+      "valoracio": 0,
+      "ingredients": controllers[4].text.split('\n'),
+      "pasAPas": controllers[5].text.split('\n'),
+      "imatge": controllers[6].text,
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          pageName,
-          style: const TextStyle(color: Colors.white),
-        ),
-        backgroundColor: Colors.grey[900],
-        iconTheme: const IconThemeData(color: Colors.white),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.save),
-            onPressed: () {
-              saveRecepta();
-            },
+    Completer<bool> discardChangesCompleter = Completer<bool>();
+    return WillPopScope(
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            pageName,
+            style: const TextStyle(color: Colors.white),
           ),
-        ],
-      ),
-      backgroundColor: Colors.grey[800],
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: ListView(
-          children: [
-            const SizedBox(height: 8),
-            editTextField("Nom de la recepta", 0, 1),
-            const SizedBox(height: 16),
-            editTextField("Temps de preparació (min)", 1, 1),
-            const SizedBox(height: 16),
-            editTextField("Racions", 2, 1),
-            const SizedBox(height: 16),
-            editTextField("Calories totals", 3, 1),
-            const SizedBox(height: 16),
-            editTextField("Ingredients", 4, 5),
-            const SizedBox(height: 16),
-            editTextField("Preparació", 5, 5),
-            const SizedBox(height: 16),
-            editTextField("Link imatge", 6, 1),
-            const SizedBox(height: 24),
-            Center(
-              child: ElevatedButton(
-                onPressed: saveRecepta,
-                child: const Text("Desa"),
-              ),
+          backgroundColor: Colors.grey[900],
+          iconTheme: const IconThemeData(color: Colors.white),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.save),
+              onPressed: () {
+                saveRecepta();
+              },
             ),
           ],
         ),
+        backgroundColor: Colors.grey[800],
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: ListView(
+            children: [
+              const SizedBox(height: 8),
+              editTextField("Nom de la recepta", 0, 1),
+              const SizedBox(height: 16),
+              editTextField("Temps de preparació (min)", 1, 1),
+              const SizedBox(height: 16),
+              editTextField("Racions", 2, 1),
+              const SizedBox(height: 16),
+              editTextField("Calories totals", 3, 1),
+              const SizedBox(height: 16),
+              editTextField("Ingredients", 4, 5),
+              const SizedBox(height: 16),
+              editTextField("Preparació", 5, 5),
+              const SizedBox(height: 16),
+              editTextField("Link imatge", 6, 1),
+              const SizedBox(height: 24),
+              Center(
+                child: ElevatedButton(
+                  onPressed: saveRecepta,
+                  child: const Text("Desa"),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
+      onWillPop: () async {
+        if (receptaInicial!.nom != controllers[0].text ||
+            receptaInicial!.tempsPreparacio !=
+                int.tryParse(controllers[1].text) ||
+            receptaInicial!.persones !=
+                (int.tryParse(controllers[2].text) ?? 0) ||
+            receptaInicial!.calories !=
+                (int.tryParse(controllers[3].text) ?? 0) ||
+            receptaInicial!.ingredients != controllers[4].text.split('\n') ||
+            receptaInicial!.pasAPas != controllers[5].text.split('\n') ||
+            receptaInicial!.imatge != controllers[6].text) {
+          return true;
+        } else {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text('Descartar canvis?'),
+                content: const Text(
+                    'Si surts ara, els canvis que has fet no es guardaran.'),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text('Cancel·la'),
+                    onPressed: () {
+                      discardChangesCompleter.complete(false);
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  TextButton(
+                    child: const Text('Surt'),
+                    onPressed: () {
+                      discardChangesCompleter.complete(true);
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+          bool retorn = await discardChangesCompleter.future;
+          discardChangesCompleter = Completer<bool>();
+          return retorn;
+        }
+      },
     );
   }
 
