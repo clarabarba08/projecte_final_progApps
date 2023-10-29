@@ -12,13 +12,31 @@ class _PantallaEditaReceptaState extends State<PantallaEditaRecepta> {
   List<TextEditingController> controllers = [
     for (var i = 0; i < 7; i++) TextEditingController()
   ];
+  String pageName = "Nova recepta";
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args = ModalRoute.of(context)!.settings.arguments;
+    if (args is Recepta) {
+      final Recepta recepta = args as Recepta;
+      controllers[0].text = recepta.nom;
+      controllers[1].text = recepta.tempsPreparacio.toString();
+      controllers[2].text = recepta.persones.toString();
+      controllers[3].text = recepta.calories.toString();
+      controllers[4].text = recepta.ingredients.join('\n');
+      controllers[5].text = recepta.pasAPas.join('\n');
+      controllers[6].text = recepta.imatge;
+      pageName = "Edita recepta";
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Edita recepta",
+        title: Text(
+          pageName,
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.grey[900],

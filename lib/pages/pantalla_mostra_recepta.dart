@@ -8,7 +8,6 @@ class PantallaMostraRecepta extends StatelessWidget {
   Widget build(BuildContext context) {
     final Recepta recepta =
         ModalRoute.of(context)!.settings.arguments as Recepta;
-
     return Scaffold(
       body: ListView(
         children: [
@@ -60,6 +59,17 @@ class _RecipeBannerState extends State<RecipeBanner> {
                   children: [
                     const BackButton(
                       color: Colors.white,
+                    ),
+                    Expanded(child: Container()),
+                    IconButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, "/edita_recepta",
+                            arguments: widget.recepta);
+                      },
+                      icon: const Icon(
+                        Icons.edit,
+                        color: Colors.white,
+                      ),
                     ),
                     IconButton(
                       onPressed: () {
