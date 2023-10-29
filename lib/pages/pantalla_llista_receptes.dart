@@ -155,26 +155,24 @@ class _PantallaLlistaReceptesState extends State<PantallaLlistaReceptes> {
           arguments: receptes![index],
         ).then((value) => setState(() {
               if (value is Recepta) {
-                receptes![index].liked = value.liked;
-                receptes![index].valoracio = value.valoracio;
+                receptes![index] = value;
               } else if (value is bool) {
                 receptes!.removeAt(index);
               }
             }));
       },
       onLongPress: () {
-        //ask if you want to delete the recipe
         showDialog(
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
               backgroundColor: Colors.grey[900],
-              title: const Text(
-                'Eliminar recepta',
+              title: Text(
+                receptes![index].nom,
                 style: TextStyle(color: Colors.white),
               ),
               content: const Text(
-                'Estàs segur que vols eliminar la recepta?',
+                'Què vols fer amb la recepta?',
                 style: TextStyle(color: Colors.white),
               ),
               actions: [
@@ -196,6 +194,25 @@ class _PantallaLlistaReceptesState extends State<PantallaLlistaReceptes> {
                   },
                   child: const Text(
                     'Eliminar',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context)
+                        .pushNamed("/edita_recepta",
+                            arguments: receptes![index])
+                        .then((value) {
+                      if (value is Recepta) {
+                        setState(() {
+                          receptes![index] = value;
+                        });
+                      }
+                      Navigator.of(context).pop();
+                    });
+                  },
+                  child: const Text(
+                    'Editar',
                     style: TextStyle(color: Colors.black),
                   ),
                 ),

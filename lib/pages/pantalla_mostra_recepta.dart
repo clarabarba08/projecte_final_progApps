@@ -22,22 +22,29 @@ class PantallaMostraRecepta extends StatelessWidget {
 }
 
 class RecipeBanner extends StatefulWidget {
-  final Recepta recepta;
-  const RecipeBanner(this.recepta);
+  final Recepta recepta_entrada;
+  const RecipeBanner(this.recepta_entrada);
 
   @override
   State<RecipeBanner> createState() => _RecipeBannerState();
 }
 
 class _RecipeBannerState extends State<RecipeBanner> {
+  Recepta? recepta;
+
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    recepta = widget.recepta_entrada;
+  }
+
   Widget build(BuildContext context) {
     return WillPopScope(
       child: Container(
         height: 300,
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: NetworkImage(widget.recepta.imatge),
+            image: NetworkImage(recepta!.imatge),
             fit: BoxFit.cover,
           ),
         ),
@@ -64,7 +71,14 @@ class _RecipeBannerState extends State<RecipeBanner> {
                     IconButton(
                       onPressed: () {
                         Navigator.pushNamed(context, "/edita_recepta",
-                            arguments: widget.recepta);
+                                arguments: recepta)
+                            .then((value) {
+                          if (value is Recepta) {
+                            setState(() {
+                              recepta = value;
+                            });
+                          }
+                        });
                       },
                       icon: const Icon(
                         Icons.edit,
@@ -89,7 +103,7 @@ class _RecipeBannerState extends State<RecipeBanner> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          widget.recepta.nom,
+                          recepta!.nom,
                           style: const TextStyle(
                             fontSize: 20,
                             color: Colors.white,
@@ -98,24 +112,22 @@ class _RecipeBannerState extends State<RecipeBanner> {
                         IconButton(
                           onPressed: () {
                             setState(() {
-                              widget.recepta.liked = !widget.recepta.liked;
+                              recepta!.liked = !recepta!.liked;
                             });
                           },
                           icon: Icon(
                             Icons.favorite,
-                            color: widget.recepta.liked
-                                ? Colors.red
-                                : Colors.white,
+                            color: recepta!.liked ? Colors.red : Colors.white,
                             size: 30,
                           ),
                         )
                       ],
                     ),
                     Rating(
-                      valoracio: widget.recepta.valoracio,
+                      valoracio: recepta!.valoracio,
                       setRating: (valoracio) {
                         setState(() {
-                          widget.recepta.valoracio = valoracio;
+                          recepta!.valoracio = valoracio;
                         });
                       },
                     ),
@@ -127,7 +139,7 @@ class _RecipeBannerState extends State<RecipeBanner> {
         ),
       ),
       onWillPop: () async {
-        Navigator.pop(context, widget.recepta);
+        Navigator.pop(context, recepta);
         return false;
       },
     );
