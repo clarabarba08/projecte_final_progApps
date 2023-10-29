@@ -122,7 +122,7 @@ class _PantallaLlistaReceptesState extends State<PantallaLlistaReceptes> {
                           valoracio: receptes![index].valoracio,
                         ),
                         onTap: () {
-                          RatingDialog(context,
+                          ratingDialog(context,
                               (valoracio) => valorarRecepta(index, valoracio));
                         },
                       ),
@@ -169,7 +169,7 @@ class _PantallaLlistaReceptesState extends State<PantallaLlistaReceptes> {
               backgroundColor: Colors.grey[900],
               title: Text(
                 receptes![index].nom,
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
               ),
               content: const Text(
                 'Què vols fer amb la recepta?',
@@ -246,7 +246,7 @@ class Rating extends StatelessWidget {
   }
 }
 
-Future<void> RatingDialog(
+Future<void> ratingDialog(
   BuildContext context,
   Function valoraRecepta,
 ) {

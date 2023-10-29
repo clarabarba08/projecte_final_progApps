@@ -22,8 +22,8 @@ class PantallaMostraRecepta extends StatelessWidget {
 }
 
 class RecipeBanner extends StatefulWidget {
-  final Recepta recepta_entrada;
-  const RecipeBanner(this.recepta_entrada);
+  final Recepta receptaEntrada;
+  const RecipeBanner(this.receptaEntrada);
 
   @override
   State<RecipeBanner> createState() => _RecipeBannerState();
@@ -35,9 +35,10 @@ class _RecipeBannerState extends State<RecipeBanner> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    recepta = widget.recepta_entrada;
+    recepta = widget.receptaEntrada;
   }
 
+  @override
   Widget build(BuildContext context) {
     return WillPopScope(
       child: Container(

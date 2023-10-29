@@ -35,7 +35,7 @@ class _PantallaEditaReceptaState extends State<PantallaEditaRecepta> {
     super.didChangeDependencies();
     final args = ModalRoute.of(context)!.settings.arguments;
     if (args is Recepta) {
-      final Recepta recepta = args as Recepta;
+      final Recepta recepta = args;
       controllers[0].text = recepta.nom;
       controllers[1].text = recepta.tempsPreparacio.toString();
       controllers[2].text = recepta.persones.toString();
@@ -53,7 +53,7 @@ class _PantallaEditaReceptaState extends State<PantallaEditaRecepta> {
       appBar: AppBar(
         title: Text(
           pageName,
-          style: TextStyle(color: Colors.white),
+          style: const TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.grey[900],
         iconTheme: const IconThemeData(color: Colors.white),
@@ -88,8 +88,8 @@ class _PantallaEditaReceptaState extends State<PantallaEditaRecepta> {
             const SizedBox(height: 24),
             Center(
               child: ElevatedButton(
-                child: const Text("Desa"),
                 onPressed: saveRecepta,
+                child: const Text("Desa"),
               ),
             ),
           ],
