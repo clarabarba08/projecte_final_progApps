@@ -160,6 +160,48 @@ class _PantallaLlistaReceptesState extends State<PantallaLlistaReceptes> {
               }
             }));
       },
+      onLongPress: () {
+        //ask if you want to delete the recipe
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              backgroundColor: Colors.grey[900],
+              title: const Text(
+                'Eliminar recepta',
+                style: TextStyle(color: Colors.white),
+              ),
+              content: const Text(
+                'Estàs segur que vols eliminar la recepta?',
+                style: TextStyle(color: Colors.white),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text(
+                    'Cancel·lar',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      receptes!.removeAt(index);
+                    });
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text(
+                    'Eliminar',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      },
     );
   }
 }
