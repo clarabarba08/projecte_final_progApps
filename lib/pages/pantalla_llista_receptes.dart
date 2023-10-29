@@ -157,6 +157,8 @@ class _PantallaLlistaReceptesState extends State<PantallaLlistaReceptes> {
               if (value is Recepta) {
                 receptes![index].liked = value.liked;
                 receptes![index].valoracio = value.valoracio;
+              } else if (value is bool) {
+                receptes!.removeAt(index);
               }
             }));
       },

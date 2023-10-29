@@ -56,10 +56,20 @@ class _RecipeBannerState extends State<RecipeBanner> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    BackButton(
+                    const BackButton(
                       color: Colors.white,
                     ),
+                    IconButton(
+                      onPressed: () {
+                        Navigator.pop(context, true);
+                      },
+                      icon: const Icon(
+                        Icons.delete,
+                        color: Colors.white,
+                      ),
+                    )
                   ],
                 ),
                 Column(
