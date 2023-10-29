@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:tasca_3/classe_recepta.dart';
-import "dart:collection";
 
 class PantallaEditaRecepta extends StatefulWidget {
   static const String route = '/edita_recepta';
