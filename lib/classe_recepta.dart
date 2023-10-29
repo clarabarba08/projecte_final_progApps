@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 class Recepta {
   String nom, imatge;
   int tempsPreparacio, persones, calories, valoracio;
@@ -26,4 +28,15 @@ class Recepta {
         'pasAPas': pasAPas,
         'imatge': imatge,
       };
+
+  bool hasSameContent(Recepta other) {
+    return nom == other.nom &&
+        tempsPreparacio == other.tempsPreparacio &&
+        persones == other.persones &&
+        calories == other.calories &&
+        valoracio == other.valoracio &&
+        listEquals(ingredients, other.ingredients) &&
+        listEquals(pasAPas, other.pasAPas) &&
+        imatge == other.imatge;
+  }
 }

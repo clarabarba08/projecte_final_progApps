@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:tasca_3/classe_recepta.dart';
+import "dart:collection";
 
 class PantallaEditaRecepta extends StatefulWidget {
   static const String route = '/edita_recepta';
@@ -111,16 +112,17 @@ class _PantallaEditaReceptaState extends State<PantallaEditaRecepta> {
         ),
       ),
       onWillPop: () async {
-        if (receptaInicial!.nom != controllers[0].text ||
-            receptaInicial!.tempsPreparacio !=
-                int.tryParse(controllers[1].text) ||
-            receptaInicial!.persones !=
-                (int.tryParse(controllers[2].text) ?? 0) ||
-            receptaInicial!.calories !=
-                (int.tryParse(controllers[3].text) ?? 0) ||
-            receptaInicial!.ingredients != controllers[4].text.split('\n') ||
-            receptaInicial!.pasAPas != controllers[5].text.split('\n') ||
-            receptaInicial!.imatge != controllers[6].text) {
+        Recepta receptaNova = Recepta({
+          "nom": controllers[0].text,
+          "tempsPreparacio": int.tryParse(controllers[1].text) ?? 0,
+          "persones": int.tryParse(controllers[2].text) ?? 0,
+          "calories": int.tryParse(controllers[3].text) ?? 0,
+          "valoracio": 0,
+          "ingredients": controllers[4].text.split('\n'),
+          "pasAPas": controllers[5].text.split('\n'),
+          "imatge": controllers[6].text,
+        });
+        if (receptaNova.hasSameContent(receptaInicial!)) {
           return true;
         } else {
           showDialog(
