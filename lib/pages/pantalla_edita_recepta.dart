@@ -14,6 +14,22 @@ class _PantallaEditaReceptaState extends State<PantallaEditaRecepta> {
   ];
   String pageName = "Nova recepta";
 
+  void saveRecepta() {
+    Recepta recepta = Recepta({
+      "nom": controllers[0].text,
+      "tempsPreparacio": int.parse(controllers[1].text),
+      "persones": int.parse(controllers[2].text),
+      "calories": int.parse(controllers[3].text),
+      "valoracio": 0,
+      "ingredients": controllers[4].text.split('\n'),
+      "pasAPas": controllers[5].text.split('\n'),
+      "imatge": controllers[6].text == ""
+          ? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkRKA2d4bynFWUL1-K4cCg4GYUNeBC7R9RtycIkKGf6jL8zhrUj9yROdOUH53yhNTjEgw&usqp=CAU"
+          : controllers[6].text,
+    });
+    Navigator.pop(context, recepta);
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -41,6 +57,14 @@ class _PantallaEditaReceptaState extends State<PantallaEditaRecepta> {
         ),
         backgroundColor: Colors.grey[900],
         iconTheme: const IconThemeData(color: Colors.white),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.save),
+            onPressed: () {
+              saveRecepta();
+            },
+          ),
+        ],
       ),
       backgroundColor: Colors.grey[800],
       body: Padding(
@@ -65,21 +89,7 @@ class _PantallaEditaReceptaState extends State<PantallaEditaRecepta> {
             Center(
               child: ElevatedButton(
                 child: const Text("Desa"),
-                onPressed: () {
-                  final Recepta recepta = Recepta({
-                    "nom": controllers[0].text,
-                    "tempsPreparacio": int.parse(controllers[1].text),
-                    "persones": int.parse(controllers[2].text),
-                    "calories": int.parse(controllers[3].text),
-                    "valoracio": 0,
-                    "ingredients": controllers[4].text.split('\n'),
-                    "pasAPas": controllers[5].text.split('\n'),
-                    "imatge": controllers[6].text == ""
-                        ? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkRKA2d4bynFWUL1-K4cCg4GYUNeBC7R9RtycIkKGf6jL8zhrUj9yROdOUH53yhNTjEgw&usqp=CAU"
-                        : controllers[6].text,
-                  });
-                  Navigator.pop(context, recepta);
-                },
+                onPressed: saveRecepta,
               ),
             ),
           ],
