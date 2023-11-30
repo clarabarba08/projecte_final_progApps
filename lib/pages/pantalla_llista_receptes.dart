@@ -2,16 +2,38 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tasca_3/classe_recepta.dart';
 import 'dart:convert';
+import 'package:tasca_3/pages/pantalla_edita_recepta.dart';
+import 'package:tasca_3/pages/pantalla_mostra_recepta.dart';
 
-class PantallaLlistaReceptes extends StatefulWidget {
-  static const String route = '/';
+class PantallaLlistaReceptes extends StatelessWidget {
   const PantallaLlistaReceptes({super.key});
 
   @override
-  State<PantallaLlistaReceptes> createState() => _PantallaLlistaReceptesState();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+        title: "App de receptes",
+        theme: ThemeData(
+          primarySwatch: Colors.grey,
+        ),
+        home: PantallaLlistaReceptes1(),
+        routes: {
+          PantallaMostraRecepta.route: (context) =>
+              const PantallaMostraRecepta(),
+          PantallaEditaRecepta.route: (context) => const PantallaEditaRecepta(),
+        });
+  }
 }
 
-class _PantallaLlistaReceptesState extends State<PantallaLlistaReceptes> {
+class PantallaLlistaReceptes1 extends StatefulWidget {
+  static const String route = '/';
+  const PantallaLlistaReceptes1({super.key});
+
+  @override
+  State<PantallaLlistaReceptes1> createState() =>
+      _PantallaLlistaReceptesState();
+}
+
+class _PantallaLlistaReceptesState extends State<PantallaLlistaReceptes1> {
   List<Recepta>? receptes;
 
   Future<List<Recepta>> getLlistaReceptesFuture() async {
@@ -47,11 +69,6 @@ class _PantallaLlistaReceptesState extends State<PantallaLlistaReceptes> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("Llista de receptes",
-              style: TextStyle(color: Colors.white)),
-          backgroundColor: Colors.grey[900],
-        ),
         backgroundColor: Colors.grey[800],
         body: llistaReceptes(),
         floatingActionButton: FloatingActionButton(
